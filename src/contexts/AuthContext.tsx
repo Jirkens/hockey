@@ -2,12 +2,12 @@ import { createContext, Dispatch, FC, ReactElement, SetStateAction, useContext, 
 
 import { IAuthToken } from "../types";
 
-export interface AuthContextValues {
+export interface IAuthContextValues {
   auth: IAuthToken | undefined;
   setAuth: Dispatch<SetStateAction<IAuthToken | undefined>>;
 }
 
-export const AuthContext = createContext<AuthContextValues | undefined>(undefined);
+export const AuthContext = createContext<IAuthContextValues | undefined>(undefined);
 
 export const AuthProvider: FC<{children: ReactElement}>  = ({ children }) => {
     const [auth, setAuth] = useState<IAuthToken | undefined>(undefined);
@@ -23,7 +23,7 @@ export const AuthProvider: FC<{children: ReactElement}>  = ({ children }) => {
     return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
-export const useAuthContext = (): AuthContextValues => {
+export const useAuthContext = (): IAuthContextValues => {
   const context = useContext(AuthContext);
 
   if (context) {

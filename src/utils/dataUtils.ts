@@ -1,4 +1,4 @@
-import { IAuthToken } from "../types";
+import { IAuthToken, IPlayer } from "../types";
 
 export const parseTokenData = (data: any): IAuthToken => (
   {
@@ -7,3 +7,19 @@ export const parseTokenData = (data: any): IAuthToken => (
     tokenType: String(data.token_type),
   }
 ); 
+
+export const parseIndividualStatsData = (data: any): IPlayer[] => {
+  const players: IPlayer[] = data.reduce((prev: IPlayer[], value: any) => {
+    const playerArray: IPlayer[] = value.players.map((player: any) => {
+      return {
+        playerId: player.player,
+        stats: player.stats,
+        teamId: value.team,
+      }
+    });
+
+    return prev.concat(playerArray);
+  }, [])
+
+  return players;
+};

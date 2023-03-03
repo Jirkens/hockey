@@ -1,6 +1,7 @@
 import { FC, ReactElement, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 
+import { TEST_CREDENTIALS } from "./constants";
 import { useAuthContext } from "./contexts/AuthContext";
 import { IAuthToken } from "./types";
 import { parseTokenData } from "./utils";
@@ -14,11 +15,7 @@ export const AuthWrapper: FC<{children: ReactElement}> = ({ children }) => {
     () => axiosInstance({
       method: 'post',
       url: `/token`,
-      data: {
-        grant_type: "client_credentials",
-        client_id: "john",
-        client_secret: "doe"
-      },
+      data: TEST_CREDENTIALS,
     }).then(response => response.data),
     {
       refetchOnWindowFocus: false,

@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 
+import { IndividualStatsPage } from "./IndividualStatsPage";
 import { ICompetitionsSet } from "./types";
 import { axiosInstance } from "./WithAxios";
 
@@ -21,10 +22,10 @@ export const MainPage = () => {
   }
 
   console.log("MainPageData", data);
-
+  
   return (
-    <div>
-      
-    </div>
+    <IndividualStatsPage
+      competitions={data[0].competitions}
+    />
   );
 };
