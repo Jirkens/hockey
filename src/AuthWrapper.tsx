@@ -1,7 +1,8 @@
 import { FC, ReactElement, useEffect } from "react";
-import { Alert, CircularProgress } from "@mui/material";
+import { Alert } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 
+import { EmptyDataWrapper, LoadingData } from "./components";
 import { TEST_CREDENTIALS } from "./constants";
 import { useAuthContext } from "./contexts";
 import { IAuthToken } from "./types";
@@ -31,12 +32,20 @@ export const AuthWrapper: FC<{children: ReactElement}> = ({ children }) => {
   }, [data, setAuth]);
 
   if (isLoading) {
-    return <CircularProgress size={80} />;
+    return (
+      <EmptyDataWrapper>
+        <LoadingData loadingMessage={'Loading authentication data...'} />
+      </EmptyDataWrapper>
+    );
   }
 
   if (error) {
-    return <Alert severity="error">An error has occurred: {error.message}</Alert>;
+    return (
+      <EmptyDataWrapper>
+        <Alert severity="error">An error has occurred: {error.message}</Alert>
+      </EmptyDataWrapper>
+    );
   }
 
-  return (children);
+  return children;
 };

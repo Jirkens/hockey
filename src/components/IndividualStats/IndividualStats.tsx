@@ -1,12 +1,13 @@
-import { FC, FormEvent, useState } from "react";
-import { Alert, Button, CircularProgress, styled } from "@mui/material";
+import { FC, FormEvent, useMemo, useState } from "react";
+import { Alert, Button, styled } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 
 import { DEFAULT_METRICS } from "../../constants";
 import { useMetricsContext } from "../../contexts";
+import { EmptyDataWrapper } from "../EmptyDataWrapper";
 import { MetricsCheckboxes } from "../MetricsCheckboxes";
-import { StatsTable } from "../StatsTable";
-import { IMetricsRecord, IPlayer } from "../../types";
+import { StatsTable, StatsTableSkeleton } from "../StatsTable";
+import { ICompetitionsSet, IMetricsRecord, IPlayer } from "../../types";
 import { parseIndividualStatsData, transformMetrics } from "../../utils";
 import { axiosInstance } from "../../WithAxios";
 
@@ -15,12 +16,12 @@ const FormControlContainer = styled('div')(({ theme }) => ({
   display: 'flex',
   justifyContent: 'space-between',
   alignItems: 'center',
-  padding: theme.spacing(2),
+  padding: theme.spacing(0, 0, 2),
 }));
 
 const IndividualStatsContainer = styled('div')(({ theme }) => ({
   maxHeight: '100vh',
-  padding: theme.spacing(0, 2),
+  padding: theme.spacing(2),
 }));
 
 const StyledButton = styled(Button)({
@@ -29,15 +30,21 @@ const StyledButton = styled(Button)({
 });
 
 export interface IIndividualStatsProps {
-  competitionsUuids: string[];
+  competitionsSet: ICompetitionsSet | undefined;
 }
 
 export const IndividualStats: FC<IIndividualStatsProps> = ({
-  competitionsUuids,
+  competitionsSet,
 }) => {
   const [metricsCheckboxes, setMetricsCheckboxes] = useState<IMetricsRecord>(DEFAULT_METRICS);
 
   const { setMetrics } = useMetricsContext();
+
+  const competitionsUuids = useMemo(() => (
+    competitionsSet && competitionsSet.competitions.length > 0
+      ? competitionsSet.competitions.map(competiton => competiton.uuid)
+      : []
+  ), [competitionsSet]);
 
   const { isLoading, error, data, refetch } = useQuery<IPlayer[], Error>(
     ["individualStats"],
@@ -63,11 +70,15 @@ export const IndividualStats: FC<IIndividualStatsProps> = ({
   };
 
   if (isLoading) {
-    return <CircularProgress size={80} />;
+    return <StatsTableSkeleton />;
   }
 
   if (error) {
-    return <Alert severity="error">An error has occurred: {error.message}</Alert>;
+    return (
+      <EmptyDataWrapper>
+        <Alert severity="error">An error has occurred: {error.message}</Alert>
+      </EmptyDataWrapper>
+    );
   }
 
   const noMetricIsChecked =

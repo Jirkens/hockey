@@ -7,17 +7,15 @@ import {
 import {
   Table,
   TableBody,
-  TableCell,
   TableContainer,
   TablePagination,
-  TableRow,
   Paper,
 } from '@mui/material';
 
-import { useMetricsContext } from '../../contexts';
 import { StatsTableHead } from './StatsTableHead';
+import { StatsTableRow } from './StatsTableRow';
 import { IPlayer, OrderType } from '../../types';
-import { secondsToMinutesAndSeconds, sortArray } from '../../utils';
+import { sortArray } from '../../utils';
 
 const ROWS_PER_PAGE_OPTIONS = [10, 20, 50];
 
@@ -30,8 +28,6 @@ export const StatsTable: FC<IStatsTableProps> = ({ playerStatsRows }) => {
   const [orderBy, setOrderBy] = useState<keyof IPlayer | undefined>(undefined);
   const [page, setPage] = useState<number>(0);
   const [rowsPerPage, setRowsPerPage] = useState<number>(ROWS_PER_PAGE_OPTIONS[0]);
-
-  const { metrics } = useMetricsContext();
 
   const handleRequestSort = (
     _: MouseEvent<unknown>,
@@ -64,10 +60,7 @@ export const StatsTable: FC<IStatsTableProps> = ({ playerStatsRows }) => {
   return (
     <Paper sx={{ width: '100%', maxHeight: 'calc(100vh - 140px)' }}>
       <TableContainer sx={{ maxHeight: 'inherit' }}>
-        <Table
-          sx={{ minWidth: 750 }}
-          stickyHeader
-        >
+        <Table sx={{ minWidth: 750 }} stickyHeader>
           <StatsTableHead
             order={order}
             orderBy={orderBy}
@@ -77,28 +70,10 @@ export const StatsTable: FC<IStatsTableProps> = ({ playerStatsRows }) => {
           <TableBody>
             {sortArray(playerStatsRows, order, orderBy)
               .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-              .map(row => {
-                return (
-                  <TableRow
-                    hover
-                    key={`${row.playerId}_${row.teamId}`}
-                  >
-                    <TableCell
-                      component="th"
-                      scope="row"
-                      align="left"
-                    >
-                      {row.teamId}
-                    </TableCell>
-                    <TableCell align="left">{row.playerId}</TableCell>
-                    <TableCell align="left">{secondsToMinutesAndSeconds(row.toi)}</TableCell>
-                    <TableCell align="left">{row.gp}</TableCell>
-                    {metrics.xg60.isChecked ? <TableCell align="left">{row.xg60}</TableCell> : null}
-                    {metrics.c60.isChecked ? <TableCell align="left">{row.c60}</TableCell> : null}
-                    {metrics.sogc_pct.isChecked ? <TableCell align="left">{row.sogc_pct}</TableCell> : null}
-                  </TableRow>
-                );
-              })}
+              .map(row => (
+                <StatsTableRow key={`${row.playerId}_${row.teamId}`} {...{ row }} />
+              )
+            )}
           </TableBody>
         </Table>
       </TableContainer>
