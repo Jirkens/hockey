@@ -17,7 +17,7 @@ import {
 import { useMetricsContext } from '../../contexts';
 import { StatsTableHead } from './StatsTableHead';
 import { IPlayer, OrderType } from '../../types';
-import { sortArray } from '../../utils';
+import { secondsToMinutesAndSeconds, sortArray } from '../../utils';
 
 const ROWS_PER_PAGE_OPTIONS = [10, 20, 50];
 
@@ -91,7 +91,7 @@ export const StatsTable: FC<IStatsTableProps> = ({ playerStatsRows }) => {
                       {row.teamId}
                     </TableCell>
                     <TableCell align="left">{row.playerId}</TableCell>
-                    <TableCell align="left">{row.toi}</TableCell>
+                    <TableCell align="left">{secondsToMinutesAndSeconds(row.toi)}</TableCell>
                     <TableCell align="left">{row.gp}</TableCell>
                     {metrics.xg60.isChecked ? <TableCell align="left">{row.xg60}</TableCell> : null}
                     {metrics.c60.isChecked ? <TableCell align="left">{row.c60}</TableCell> : null}
