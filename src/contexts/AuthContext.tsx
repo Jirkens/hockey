@@ -10,17 +10,17 @@ export interface IAuthContextValues {
 export const AuthContext = createContext<IAuthContextValues | undefined>(undefined);
 
 export const AuthProvider: FC<{children: ReactElement}>  = ({ children }) => {
-    const [auth, setAuth] = useState<IAuthToken | undefined>(undefined);
+  const [auth, setAuth] = useState<IAuthToken | undefined>(undefined);
 
-    const value = useMemo(
-      () => ({
-        auth,
-        setAuth,
-      }),
-      [auth, setAuth],
-    );
+  const value = useMemo(
+    () => ({
+      auth,
+      setAuth,
+    }),
+    [auth, setAuth],
+  );
 
-    return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
 export const useAuthContext = (): IAuthContextValues => {

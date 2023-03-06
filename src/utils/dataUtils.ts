@@ -12,9 +12,13 @@ export const parseIndividualStatsData = (data: any): IPlayer[] => {
   const players: IPlayer[] = data.reduce((prev: IPlayer[], value: any) => {
     const playerArray: IPlayer[] = value.players.map((player: any) => {
       return {
-        playerId: player.player,
-        stats: player.stats,
         teamId: value.team,
+        playerId: player.player,
+        toi: player.stats.toi,
+        gp: player.stats.gp,
+        xg60: player.stats.xg60,
+        c60: player.stats.c60,
+        sogc_pct: player.stats.sogc_pct,
       }
     });
 

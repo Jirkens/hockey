@@ -1,10 +1,11 @@
+import { Alert, CircularProgress } from "@mui/material";
 import { useQuery } from "@tanstack/react-query";
 
-import { IndividualStatsPage } from "./IndividualStatsPage";
+import { IndividualStats } from "./components";
 import { ICompetitionsSet } from "./types";
 import { axiosInstance } from "./WithAxios";
 
-export const MainPage = () => {
+export const MainPage = () => {  
   const { isLoading, error, data } = useQuery<ICompetitionsSet[], Error>(
     ["competition"],
     () => axiosInstance.get(`/competition`).then(response => response.data),
@@ -14,18 +15,16 @@ export const MainPage = () => {
   );
 
   if (isLoading) {
-    return null;
+    return <CircularProgress size={80} />;
   }
 
   if (error) {
-    return null;
+    return <Alert severity="error">An error has occurred: {error.message}</Alert>;;
   }
 
-  console.log("MainPageData", data);
+  const competitionsUuids = data[0].competitions.length > 0 ? data[0].competitions.map(competiton => competiton.uuid) : [];
   
   return (
-    <IndividualStatsPage
-      competitions={data[0].competitions}
-    />
+    <IndividualStats competitionsUuids={competitionsUuids} />
   );
 };

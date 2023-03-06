@@ -16,15 +16,30 @@ export interface ICompetitionsSet {
 }
 
 export interface IStats {
-  c60: number;
-  gp: number;
-  sogc_pct: number;
   toi: number;
+  gp: number;
   xg60: number;
+  c60: number;
+  sogc_pct: number;
 }
 
-export interface IPlayer {
-  playerId: string;
-  stats: IStats;
+interface IBasePlayer {
   teamId: string;
+  playerId: string;
 }
+
+export interface IPlayer extends IBasePlayer, IStats {}
+
+export enum OrderType {
+  ascending = 'asc',
+  descending = 'desc',
+}
+
+interface IMetrics {
+  name: string;
+  isChecked: boolean;
+}
+
+type MetricsName = "xg60" | "c60" | "sogc_pct";
+
+export type IMetricsRecord = Record<MetricsName, IMetrics>;

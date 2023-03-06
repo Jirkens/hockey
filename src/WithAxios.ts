@@ -2,7 +2,7 @@ import axios from 'axios'
 import { FC, ReactElement, useEffect } from 'react'
 
 import { BASE_API_URL } from './constants';
-import { useAuthContext } from './contexts/AuthContext';
+import { useAuthContext } from './contexts';
 
 export const axiosInstance = axios.create({
   baseURL: BASE_API_URL,
